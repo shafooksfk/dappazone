@@ -25,4 +25,19 @@ describe("Dappazon", () => {
       expect(deployer.address).to.be.equal(await dappazon.owner());
     });
   });
+
+  describe("Listing", async () => {
+    let transaction;
+    const ID=1
+    beforeEach(async () => {
+      transaction = await dappazon
+        .connect(deployer)
+        .list(ID, "Shoes", "Clothing", "IMAGE", 1, 4, 10);
+      await transaction.wait();
+    });
+    it("Return item attributes" , async ()=>{
+      const item = await dappazon.items(ID);
+      expect(item.id).to.be.equal(ID);
+    })
+  });
 });
