@@ -21,6 +21,12 @@ contract Dappazon {
 
     event List(string name, uint cost, uint quantity);
 
+    // listing option only for owner using modifier
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _; // represents function body
+    }
+
     // list products
     function list(
         uint _id,
@@ -30,7 +36,9 @@ contract Dappazon {
         uint _cost,
         uint _rating,
         uint _stock
-    ) public {
+    ) public onlyOwner {
+        // require(msg.sender == owner); // listing option only for owner
+
         // create item struct
         Item memory item = Item(
             _id,
@@ -46,7 +54,7 @@ contract Dappazon {
         items[_id] = item;
 
         //emit an event
-        emit List(_name,_cost,_stock);
+        emit List(_name, _cost, _stock);
     }
 
     // buy products
