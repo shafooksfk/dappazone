@@ -17,7 +17,9 @@ contract Dappazon {
         uint rating;
         uint stock;
     }
-    mapping (uint => Item) public items;
+    mapping(uint => Item) public items;
+
+    event List(string name, uint cost, uint quantity);
 
     // list products
     function list(
@@ -42,6 +44,9 @@ contract Dappazon {
 
         //save item struct to blockchain
         items[_id] = item;
+
+        //emit an event
+        emit List(_name,_cost,_stock);
     }
 
     // buy products

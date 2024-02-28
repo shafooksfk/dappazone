@@ -8,6 +8,16 @@ const tokens = (n) => {
   return ethers.utils.parseUnits(n.toString(), "ether");
 };
 
+// Global variables for testing purpose
+const ID = 1;
+const NAME = "Shoes";
+const CATEGORY = "Clothing";
+const IMAGE =
+  "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
+const COST = tokens(1);
+const RATING = 4;
+const STOCK = 10;
+
 describe("Dappazon", () => {
   let dappazon;
   let deployer, buyer;
@@ -28,16 +38,26 @@ describe("Dappazon", () => {
 
   describe("Listing", async () => {
     let transaction;
-    const ID=1
     beforeEach(async () => {
       transaction = await dappazon
         .connect(deployer)
-        .list(ID, "Shoes", "Clothing", "IMAGE", 1, 4, 10);
+        .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
       await transaction.wait();
     });
-    it("Return item attributes" , async ()=>{
+
+    it("Return item attributes", async () => {
       const item = await dappazon.items(ID);
       expect(item.id).to.be.equal(ID);
-    })
+      expect(item.name).to.be.equal(NAME);
+      expect(item.category).to.be.equal(CATEGORY);
+      expect(item.image).to.be.equal(IMAGE);
+      expect(item.cost).to.be.equal(COST);
+      expect(item.rating).to.be.equal(RATING);
+      expect(item.stock).to.be.equal(STOCK);
+    });
+
+    it("Emits list event", async () => {
+      expect(transaction).to.emit(dappazon, "List");
+    });
   });
 });
