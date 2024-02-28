@@ -58,6 +58,10 @@ contract Dappazon {
     }
 
     // buy products
+    function buy(uint _id) public payable // payable is an inbuilt modifier used for transferring crypto
+    {
+        
+    }
 
     // withdraw funds
 }
