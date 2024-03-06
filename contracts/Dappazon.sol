@@ -71,6 +71,13 @@ contract Dappazon {
     ) public payable {
         // create an order
         Item memory item = items[_id];
+
+        // require enough ether to buy item
+        require(msg.value >= item.cost);
+
+        // require item is in stock
+        require(item.stock > 0);
+
         Order memory order = Order(block.timestamp, item);
 
         // add order for user
@@ -84,4 +91,8 @@ contract Dappazon {
     }
 
     // withdraw funds
+    function withdraw() public onlyOwner {
+        (bool success, ) = owner.call{value: address(this).balance}("");
+        require(success);
+    }
 }
