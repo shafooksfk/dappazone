@@ -17,9 +17,17 @@ contract Dappazon {
         uint rating;
         uint stock;
     }
-    mapping(uint => Item) public items;
+    struct Order {
+        uint time;
+        Item item;
+    }
 
     event List(string name, uint cost, uint quantity);
+    event Buy(address buyer, uint orderId, uint itemId);
+
+    mapping(uint => Item) public items;
+    mapping(address => uint) public orderCount;
+    mapping(address => mapping(uint => Order)) public orders;
 
     // listing option only for owner using modifier
     modifier onlyOwner() {
@@ -58,9 +66,21 @@ contract Dappazon {
     }
 
     // buy products
-    function buy(uint _id) public payable // payable is an inbuilt modifier used for transferring crypto
-    {
-        
+    function buy(
+        uint _id // payable is an inbuilt modifier used for transferring crypto
+    ) public payable {
+        // create an order
+        Item memory item = items[_id];
+        Order memory order = Order(block.timestamp, item);
+
+        // add order for user
+        orderCount[msg.sender]++; // order ID
+        orders[msg.sender][orderCount[msg.sender]] = order;
+
+        // substract stock
+        items[_id].stock = item.stock - 1;
+        // emit event
+        emit Buy(msg.sender, orderCount[msg.sender], item.id);
     }
 
     // withdraw funds
