@@ -1,7 +1,13 @@
 import { ethers } from "ethers";
 
 const Navigation = ({ account, setAccount }) => {
-    
+  const handleConnect = async () => {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const _account = ethers.utils.getAddress(accounts[0]);
+    setAccount(_account);
+  };
   return (
     <nav>
       <div className="nav__brand">
@@ -17,7 +23,9 @@ const Navigation = ({ account, setAccount }) => {
           {account.slice(0, 6) + "...." + account.slice(38, 42)}
         </button>
       ) : (
-        <button className="nav__connect">Connect</button>
+        <button className="nav__connect" onClick={handleConnect}>
+          Connect
+        </button>
       )}
       <ul className="nav__links">
         <li>

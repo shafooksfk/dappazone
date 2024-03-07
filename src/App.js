@@ -15,12 +15,7 @@ import config from "./config.json";
 function App() {
   const [account, setAccount] = useState(null);
   const loadBlockChainData = async () => {
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    const _account = ethers.utils.getAddress(accounts[0]);
-    console.log(_account);
-    setAccount(_account);
+   
   };
 
   useEffect(() => {
