@@ -21,6 +21,14 @@ function App() {
   const [electronics, setElectronics] = useState(null);
   const [toys, setToys] = useState(null);
 
+  const [item, setItem] = useState({});
+  const [toggle, setToggle] = useState(false);
+
+  const togglePop = (item) => {
+    setItem(item);
+    setToggle(!toggle);
+  };
+
   const loadBlockChainData = async () => {
     // connect to blockchain
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -53,7 +61,6 @@ function App() {
     // load data
   };
 
-  const handlePop = () => {};
   useEffect(() => {
     loadBlockChainData();
   }, []);
@@ -66,15 +73,25 @@ function App() {
           <Section
             title={"Clothing & Jewellery"}
             items={clothing}
-            togglePop={handlePop}
+            togglePop={togglePop}
           ></Section>
           <Section
             title={"Electronics"}
             items={electronics}
-            togglePop={handlePop}
+            togglePop={togglePop}
           ></Section>
-          <Section title={"Toys"} items={toys} togglePop={handlePop}></Section>
+          <Section title={"Toys"} items={toys} togglePop={togglePop}></Section>
         </>
+      )}
+
+      {toggle && (
+        <Product
+          item={item}
+          account={account}
+          provider={provider}
+          dappazon={dappazon}
+          togglePop={togglePop}
+        />
       )}
     </div>
   );
